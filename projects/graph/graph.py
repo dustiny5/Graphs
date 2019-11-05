@@ -111,10 +111,10 @@ class Graph:
         while q.size() > 0:
             # Dequeue the first PATH
             path = q.dequeue()
-            print('path', path)
+            #print('path', path)
             # Grab the last vertex from the PATH
             last_vertex = path[-1]
-            print('last_vertex', last_vertex)
+            #print('last_vertex', last_vertex)
             # If that vertex has not been visited...
             if last_vertex not in visited:
                 # CHECK IF IT'S THE TARGET
@@ -123,23 +123,52 @@ class Graph:
                   return path
                 # Mark it as visited...
                 visited.add(last_vertex)
-                print('visited', visited)
+                #print('visited', visited)
                 # Then add A PATH TO its neighbors to the back of the queue
                 for neighbor in self.vertices[last_vertex]:
                   # COPY THE PATH
-                  path.append(neighbor)
+                  copy_path = list(path)
+                  copy_path.append(neighbor)
                   # APPEND THE NEIGHOR TO THE BACK
-                  q.enqueue(path)
-                  # Reset back to original path, before appending
-                  path = path[:-1]
-                  
+                  q.enqueue(copy_path)
+
     def dfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        # Create an empty stack and push A PATH TO the starting vertex ID
+        s = Stack()
+        s.push([starting_vertex])
+
+        # Create a Set to store visited vertices
+        visited = set()
+
+        # While the stack is not empty...
+        while s.size() > 0:
+            # Pop the first PATH
+            path = s.pop()
+            #print('path', path)
+            # Grab the last vertex from the PATH
+            last_vertex = path[-1]
+            #print('last_vertex', last_vertex)
+            # If that vertex has not been visited...
+            if last_vertex not in visited:
+                # CHECK IF IT'S THE TARGET
+                if last_vertex == destination_vertex:
+                  # IF SO, RETURN PATH
+                  return path
+                # Mark it as visited...
+                visited.add(last_vertex)
+                #print('visited', visited)
+                # Then add A PATH TO its neighbors to the back of the stack
+                for neighbor in self.vertices[last_vertex]:
+                  # COPY THE PATH
+                  copy_path = list(path)
+                  copy_path.append(neighbor)
+                  # APPEND THE NEIGHOR TO THE BACK
+                  s.push(copy_path)
 
 
 
