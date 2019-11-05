@@ -71,21 +71,27 @@ class Graph:
                     #print(s.stack)
 
         # Return longest path
+        # First if test for list greater than length 1 and nested list with same length
         length = len({len(i) for i in l})
         if len(l) > 1 and length == 1:
-          return l[0][-1]
-        elif len(l) > 1:
-          prev = l[0]
-          for i in l[1:]:
-            if len(prev) < len(i):
-              prev = i
-          return i[-1]
-        else:
-          if len(l[0]) > 1:
+            # Returns the last value of the first pushed stack
             return l[0][-1]
-          else:
-            # If None
-            return -1
+        # Second if test for list greater than 1 and nested list with dis-similar length
+        elif len(l) > 1:
+            prev = l[0]
+            for i in l[1:]:
+                if len(prev) < len(i):
+                    prev = i
+            # Returns the last element of the longest list
+            return i[-1]
+        # Third, test for vertex with 1 ancestors
+        else:
+        
+            if len(l[0]) > 1:
+                return l[0][-1]
+            else:
+                # If None
+                return -1
 
 def earliest_ancestor(ancestors, starting_node):
     g = Graph()
