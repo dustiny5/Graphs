@@ -61,17 +61,17 @@ class Graph:
         visited = set()
 
         # While the stack is not empty...
-        while s.size > 0:
+        while s.size() > 0:
 
             # Pop the first vertex
             v = s.pop()
 
             # If that vertex has not been visted...
-            if v not in visted:
+            if v not in visited:
 
                 # Mark it as visited...
                 print(v)
-                visted.add(v)
+                visited.add(v)
 
                 # Then add all of its neighbors to the top of the stack
                 for neighbor in self.vertices[v]:
@@ -83,17 +83,19 @@ class Graph:
         beginning from starting_vertex.
         This should be done using recursion.
         """
+        # Initialize visited, if it hasn't been initialized yet
         if not visited:
             visited = set()
-            
-        print(starting_vertex)
 
-        for neighbor in self.vertices[starting_vertex]:
-            if neighbor not in visited:
-                visited.add(starting_vertex)
+        if neighbor not in visited:
+            # Print vertex
+            print(starting_vertex)
+            # Mark as visited
+            visited.add(starting_vertex)
+            # Loop through connected vertex
+            for neighbor in self.vertices[starting_vertex]:
+                # Call DFT recursion
                 self.dft_recursive(neighbor, visited)
-            else:
-                break
 
     def bfs(self, starting_vertex, destination_vertex):
         """
