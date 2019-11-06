@@ -1,8 +1,37 @@
+import random
 
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
+
+class Stack():
+    def __init__(self):
+        self.stack = []
+    def push(self, value):
+        self.stack.append(value)
+    def pop(self):
+        if self.size() > 0:
+            return self.stack.pop()
+        else:
+            return None
+    def size(self):
+        return len(self.stack)
 
 class User:
     def __init__(self, name):
         self.name = name
+
+    def __repr__(self):
+        return self.name
 
 class SocialGraph:
     def __init__(self):
@@ -47,8 +76,31 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        # Call addUser() until the nuumber of users == numUsers
+        for i in range(numUsers):
+            self.addUser(f'User: {i+1}')
 
         # Create friendships
+        # totalFriendships = avgFriendships * numUsers
+        # Generate a list of all possible friendships
+        possibleFriendships = []
+
+        # Avoid dupes by ensuring the first ID is smaller than the second ID
+        for userID in self.users:
+            for friendID in range(userID + 1, self.lastID + 1):
+                possibleFriendships.append((userID, friendID))
+
+        # Shuffle the list
+        random.shuffle(possibleFriendships)
+        print("Random Friendships")
+        print(possibleFriendships)
+
+        # Slice off totalFriendships from the front, create friendships
+        totalFriendships = avgFriendships * numUsers // 2
+        print(f'Friendships to create: {totalFriendships}\n')
+        for i in range(totalFriendships):
+            friendship = possibleFriendships[i]
+            self.addFriendship(friendship[0], friendship[1])
 
     def getAllSocialPaths(self, userID):
         """
@@ -61,12 +113,48 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
-        return visited
+        
+        # Create empty queue
+        q = Queue()
+
+        # Enqueue a path, userID
+        q.enqueue([userID])
+
+        # Put all social paths connected to userID
+        social_paths = {}
+
+        # While the queue is not empty...
+        while q.size() > 0:
+            
+            # Dequeue the first path
+            path = q.dequeue()
+
+            # Get the last vertex
+            last_vertex = path[-1]
+            
+            # If last vertex not in visited
+            if last_vertex not in visited.keys():
+                # Put in the visited dictionary
+                visited[last_vertex] = self.friendships[last_vertex]
+
+                # Update social_paths to include its connections
+                social_paths.update({last_vertex: path})
+
+                # Add a path to its neighbors to the back of the queue
+                for neighbor in self.friendships[last_vertex]:
+                    copy_path = list(path)
+                    copy_path.append(neighbor)
+                    q.enqueue(copy_path)
+
+        return social_paths
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
     sg.populateGraph(10, 2)
+    print("USERS:")
+    print(sg.users)
+    print("FRIENDSHIPS:")
     print(sg.friendships)
     connections = sg.getAllSocialPaths(1)
     print(connections)
