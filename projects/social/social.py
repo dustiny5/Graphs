@@ -107,9 +107,6 @@ class SocialGraph:
         # Enqueue a path, userID
         q.enqueue([userID])
 
-        # Put all social paths connected to userID
-        social_paths = {}
-
         # While the queue is not empty...
         while q.size() > 0:
             
@@ -121,11 +118,9 @@ class SocialGraph:
             
             # If last vertex not in visited
             if last_vertex not in visited.keys():
-                # Put in the visited dictionary
-                visited[last_vertex] = self.friendships[last_vertex]
 
-                # Update social_paths to include its connections
-                social_paths.update({last_vertex: path})
+                # Update visited to include its connections
+                visited.update({last_vertex: path})
 
                 # Add a path to its neighbors to the back of the queue
                 for neighbor in self.friendships[last_vertex]:
@@ -133,7 +128,7 @@ class SocialGraph:
                     copy_path.append(neighbor)
                     q.enqueue(copy_path)
 
-        return social_paths
+        return visited
 
 
 if __name__ == '__main__':
