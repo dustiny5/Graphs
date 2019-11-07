@@ -4,6 +4,32 @@ from world import World
 
 import random
 
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
+
+class Stack():
+    def __init__(self):
+        self.stack = []
+    def push(self, value):
+        self.stack.append(value)
+    def pop(self):
+        if self.size() > 0:
+            return self.stack.pop()
+        else:
+            return None
+    def size(self):
+        return len(self.stack)
+
 # Load world
 world = World()
 
@@ -24,12 +50,68 @@ player = Player("Name", world.startingRoom)
 # Fill this out
 traversalPath = []
 
-
-
 # TRAVERSAL TEST
 visited_rooms = set()
 player.currentRoom = world.startingRoom
-visited_rooms.add(player.currentRoom)
+# visited_rooms.add(player.currentRoom)
+
+s = Stack()
+s.push(player.currentRoom)
+
+while s.size() > 0:
+    room = s.pop()
+
+    if room not in visited_rooms:
+        visited_rooms.add(room)
+
+        for direction in room.getExits():
+            if direction == 'n':
+                s.push(room.n_to)
+                player.travel(direction)
+                traversalPath.append(direction)
+            elif direction == 's':
+                s.push(room.s_to)
+                player.travel(direction)
+                traversalPath.append(direction)
+            elif direction == 'w':
+                s.push(room.w_to)
+                player.travel(direction)
+                traversalPath.append(direction)
+            else:
+                s.push(room.e_to)
+                player.travel(direction)
+                traversalPath.append(direction)
+
+            
+# print('Player current Room', player.currentRoom)
+# print('Player current Room Exits', player.currentRoom.getExits())
+# print('Player Travel', player.travel('n'))
+# print('Player current Room', player.currentRoom)
+# print('Player current Room Exits', player.currentRoom.getExits())
+# print('Player Travel', player.travel('n'))
+# print('Player current Room', player.currentRoom)
+# print('Player Travel', player.travel('n'))
+# print('Player current Room', player.currentRoom)
+
+# print('Start Function')
+# def dft_recursive(player, visited=None):
+    
+#     if not visited:
+#         visited = set()
+
+#     if player.currentRoom not in visited:
+#         visited.add(player.currentRoom)
+
+#         for direction in player.currentRoom.getExits():
+#             traversalPath.append(direction)
+#             player.travel(direction)
+#             if direction in player.currentRoom.getExits():
+#                 dft_recursive(player, visited)
+
+# dft_recursive(player)
+# print(traversalPath)
+
+
 
 for move in traversalPath:
     player.travel(move)
