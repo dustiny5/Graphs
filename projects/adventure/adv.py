@@ -55,6 +55,9 @@ visited_rooms = set()
 player.currentRoom = world.startingRoom
 # visited_rooms.add(player.currentRoom)
 
+'''
+Depth-First Traversal Stack Solution
+'''
 s = Stack()
 s.push(player.currentRoom)
 
@@ -67,19 +70,15 @@ while s.size() > 0:
         for direction in room.getExits():
             if direction == 'n':
                 s.push(room.n_to)
-                player.travel(direction)
                 traversalPath.append(direction)
             elif direction == 's':
                 s.push(room.s_to)
-                player.travel(direction)
                 traversalPath.append(direction)
             elif direction == 'w':
                 s.push(room.w_to)
-                player.travel(direction)
                 traversalPath.append(direction)
             else:
                 s.push(room.e_to)
-                player.travel(direction)
                 traversalPath.append(direction)
 
             
@@ -93,23 +92,32 @@ while s.size() > 0:
 # print('Player Travel', player.travel('n'))
 # print('Player current Room', player.currentRoom)
 
-# print('Start Function')
-# def dft_recursive(player, visited=None):
-    
-#     if not visited:
-#         visited = set()
 
-#     if player.currentRoom not in visited:
-#         visited.add(player.currentRoom)
+def dft_recursive(room):
+    '''
+    Depth-First Traversal Recursive Solution
+    '''
 
-#         for direction in player.currentRoom.getExits():
-#             traversalPath.append(direction)
-#             player.travel(direction)
-#             if direction in player.currentRoom.getExits():
-#                 dft_recursive(player, visited)
+    global visited_rooms
 
-# dft_recursive(player)
-# print(traversalPath)
+    if room not in visited_rooms:
+        visited_rooms.add(room)
+
+        for direction in room.getExits():
+            if direction == 'n':
+                traversalPath.append(direction)
+                dft_recursive(room.n_to)
+            elif direction == 's':
+                traversalPath.append(direction)
+                dft_recursive(room.s_to)
+            elif direction == 'w':
+                traversalPath.append(direction)
+                dft_recursive(room.w_to)
+            else:
+                traversalPath.append(direction)
+                dft_recursive(room.e_to)
+
+# dft_recursive(player.currentRoom)
 
 
 
